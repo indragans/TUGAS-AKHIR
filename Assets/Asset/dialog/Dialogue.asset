@@ -15,12 +15,13 @@ MonoBehaviour:
   _uniqueId: 39d15cb8-4a0f-4874-a944-213440cf59f8
   rect:
     serializedVersion: 2
-    x: 50050
-    y: 50200
-    width: 0
-    height: 0
+    x: 49896
+    y: 50148.5
+    width: 100
+    height: 57
   nodeTitle: 
-  children: []
+  children:
+  - {fileID: 5693060964206755743}
   conditions: []
   enterActions: []
   exitActions: []
@@ -38,5 +39,94 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodes:
   - {fileID: -1978691470050762887}
+  - {fileID: 5693060964206755743}
+  - {fileID: 51089961885032600}
+  - {fileID: 4123907689839720871}
   root: {fileID: -1978691470050762887}
-  scrollPosition: {x: 0, y: 0}
+  scrollPosition: {x: 50350.75, y: 49769}
+--- !u!114 &51089961885032600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f157564dbc846468ec0ac2b6f7d545e, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  _uniqueId: 91cb50a5-1d0e-4b45-9065-db1ee03a28a7
+  rect:
+    serializedVersion: 2
+    x: 50313
+    y: 50116
+    width: 200
+    height: 146
+  nodeTitle: 
+  children:
+  - {fileID: 4123907689839720871}
+  conditions: []
+  enterActions: []
+  exitActions: []
+  choices: []
+  actor: {fileID: 11400000, guid: ecde39bd7d34dd249a306bdcbd0b0882, type: 2}
+  audio: {fileID: 0}
+  dialogue: hi hi hi
+--- !u!114 &4123907689839720871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f157564dbc846468ec0ac2b6f7d545e, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  _uniqueId: 3eb15753-d821-45ae-bbf4-cace18e0bb87
+  rect:
+    serializedVersion: 2
+    x: 50596
+    y: 50142
+    width: 200
+    height: 146
+  nodeTitle: 
+  children: []
+  conditions: []
+  enterActions: []
+  exitActions: []
+  choices: []
+  actor: {fileID: 11400000, guid: 9a860b5a29655f14082e92f40809ff6c, type: 2}
+  audio: {fileID: 0}
+  dialogue: huha?
+--- !u!114 &5693060964206755743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f157564dbc846468ec0ac2b6f7d545e, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  _uniqueId: 3c8224c9-38d7-408e-b8a0-74758155dc4d
+  rect:
+    serializedVersion: 2
+    x: 50032
+    y: 50115
+    width: 200
+    height: 146
+  nodeTitle: 
+  children:
+  - {fileID: 51089961885032600}
+  conditions: []
+  enterActions: []
+  exitActions: []
+  choices: []
+  actor: {fileID: 11400000, guid: 9a860b5a29655f14082e92f40809ff6c, type: 2}
+  audio: {fileID: 0}
+  dialogue: hola?
