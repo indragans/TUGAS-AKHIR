@@ -1,100 +1,177 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using CleverCrow.Fluid.Dialogues.Graphs;
 using TMPro;
 using UnityEngine;
 using CleverCrow.Fluid.Dialogues;
 using CleverCrow.Fluid.Databases;
-using System;
 
-namespace NoName.CoreMechanic
+public class DialoguePlayer : Singleton<DialoguePlayer>
 {
-    public class DialoguePlayer : Singleton<DialoguePlayer>
+    private DialogueController _ctrl;
+
+    [SerializeField] private GameObject dialoguePanel1;
+    [SerializeField] private GameObject dialoguePanel2;
+    [SerializeField] private TextMeshProUGUI actorName1;
+    [SerializeField] private TextMeshProUGUI actorName2;
+    [SerializeField] private TextMeshProUGUI lines1;
+    [SerializeField] private TextMeshProUGUI lines2;
+
+    private bool dialogueIsPlaying;
+    private bool waitingForInput;
+
+    private Dictionary<string, int> actorPanelMap = new Dictionary<string, int>();
+    private int currentPanelIndex = 0;
+
+    protected override void Awake()
     {
-        private DialogueController _ctrl;
-        [SerializeField] private float delayAfterDub = 1;
-        [SerializeField] private float delayIfNoDub = 5;
-        [SerializeField] private GameObject dialoguePanel;
-        [SerializeField] private TextMeshProUGUI lines1;
-        [SerializeField] private TextMeshProUGUI lines2;
+        base.Awake();
+        var database = new DatabaseInstance();
+        _ctrl = new DialogueController(database);
 
-        private bool dialogueIsPlaying;
-        protected override void Awake()
+        dialoguePanel1.SetActive(false);
+        dialoguePanel2.SetActive(false);
+    }
+
+    public void PlayDialogue(DialogueGraph dialogue, Action callback = null)
+    {
+        actorPanelMap.Clear();
+        currentPanelIndex = 0;
+        dialoguePanel1.SetActive(false);
+        dialoguePanel2.SetActive(false);
+
+        _ctrl.Events.SpeakWithAudio.AddListener((actor, text, audioClip) =>
         {
-            base.Awake();
-            var database = new DatabaseInstance();
-            _ctrl = new DialogueController(database);
-        }
+            string name = actor.DisplayName;
 
-        public void PlayDialogue(DialogueGraph dialogue, Action callback = null)
-        {
-            dialoguePanel.SetActive(true);
+            int panelIndex = GetOrAssignPanelIndexForActor(name);
+            ShowPanel(panelIndex);
 
-            _ctrl.Events.SpeakWithAudio.AddListener((actor, text, audioClip) =>
+            if (panelIndex == 1)
             {
+                actorName1.text = name;
                 lines1.text = text;
-
-                dialogueIsPlaying = true;
-                if (audioClip != null)
-                {
-                    // AudioManager.Instance.PlayDub(audioClip);
-
-                    StartCoroutine(NextDialogue());
-                }
-                else
-                {
-                    StartCoroutine(DelayNextDialogue());
-                }
-
-            });
-
-            _ctrl.Events.End.AddListener(() =>
+            }
+            else
             {
-                StartCoroutine(EndDialogue(callback));
-            });
+                actorName2.text = name;
+                lines2.text = text;
+            }
 
-            _ctrl.Play(dialogue);
-        }
+            dialogueIsPlaying = true;
+            waitingForInput = true;
+        });
 
-        private IEnumerator NextDialogue()
+        _ctrl.Events.End.AddListener(() =>
         {
-            // yield return new WaitUntil(() => !AudioManager.Instance.DubIsPlaying());
-            yield return new WaitForSeconds(delayAfterDub);
+            StartCoroutine(EndDialogue(callback));
+        });
 
-            Debug.Log("next line");
-            _ctrl.Next();
-        }
+        _ctrl.Play(dialogue);
+    }
 
-        private IEnumerator DelayNextDialogue()
+    private int GetOrAssignPanelIndexForActor(string actorName)
+    {
+        if (actorPanelMap.TryGetValue(actorName, out int existing))
         {
-            yield return new WaitForSeconds(delayIfNoDub);
-            _ctrl.Next();
+            return existing;
         }
 
-        private IEnumerator EndDialogue(Action action)
+        if (!actorPanelMap.ContainsValue(1))
         {
-            // yield return new WaitUntil(() => !AudioManager.Instance.DubIsPlaying());
-            yield return new WaitForSeconds(delayAfterDub);
-
-            dialoguePanel.SetActive(false);
-            Debug.Log("end dialogue");
-            _ctrl.Events.SpeakWithAudio.RemoveAllListeners();
-            _ctrl.Events.End.RemoveAllListeners();
-            dialogueIsPlaying = false;
-            action?.Invoke();
+            actorPanelMap[actorName] = 1;
+            return 1;
         }
-
-        public void ForceStop()
+        if (!actorPanelMap.ContainsValue(2))
         {
-            if (!dialogueIsPlaying) return;
-            _ctrl.Stop();
-
-            dialoguePanel.SetActive(false);
+            actorPanelMap[actorName] = 2;
+            return 2;
         }
 
-        private void Update()
+        int victimPanel = (currentPanelIndex == 1) ? 2 : 1;
+
+        string keyToRemove = null;
+        foreach (var kv in actorPanelMap)
         {
-            _ctrl.Tick();
+            if (kv.Value == victimPanel)
+            {
+                keyToRemove = kv.Key;
+                break;
+            }
+        }
+        if (keyToRemove != null)
+        {
+            actorPanelMap.Remove(keyToRemove);
         }
 
+        actorPanelMap[actorName] = victimPanel;
+        return victimPanel;
+    }
+
+    private void ShowPanel(int panelIndex)
+    {
+        if (panelIndex == 1)
+        {
+            dialoguePanel1.SetActive(true);
+            dialoguePanel2.SetActive(false);
+        }
+        else
+        {
+            dialoguePanel1.SetActive(false);
+            dialoguePanel2.SetActive(true);
+        }
+
+        currentPanelIndex = panelIndex;
+    }
+
+    private void Update()
+    {
+        if (_ctrl != null) _ctrl.Tick();
+
+        if (dialogueIsPlaying && waitingForInput && Input.GetKeyDown(KeyCode.Space))
+        {
+            waitingForInput = false;
+            StartCoroutine(NextDialogue());
+        }
+    }
+
+    private IEnumerator NextDialogue()
+    {
+        yield return null;
+        _ctrl.Next();
+    }
+
+    private IEnumerator EndDialogue(Action action)
+    {
+        yield return null;
+
+        dialoguePanel1.SetActive(false);
+        dialoguePanel2.SetActive(false);
+
+        Debug.Log("end dialogue");
+        _ctrl.Events.SpeakWithAudio.RemoveAllListeners();
+        _ctrl.Events.End.RemoveAllListeners();
+        dialogueIsPlaying = false;
+        waitingForInput = false;
+        actorPanelMap.Clear();
+        currentPanelIndex = 0;
+        action?.Invoke();
+    }
+
+    public void ForceStop()
+    {
+        if (!dialogueIsPlaying) return;
+        _ctrl.Stop();
+
+        dialoguePanel1.SetActive(false);
+        dialoguePanel2.SetActive(false);
+
+        _ctrl.Events.SpeakWithAudio.RemoveAllListeners();
+        _ctrl.Events.End.RemoveAllListeners();
+        dialogueIsPlaying = false;
+        waitingForInput = false;
+        actorPanelMap.Clear();
+        currentPanelIndex = 0;
     }
 }
