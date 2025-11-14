@@ -102,6 +102,7 @@ public class PlayerController2D : MonoBehaviour
         if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && !isFalling && !isJumping)
             controllerRigidbody.velocity = new Vector2(0.0f,controllerRigidbody.velocity.y);
 
+            Debug.Log("halo");
         Vector2 velocity = controllerRigidbody.velocity;
         // Apply acceleration directly as we'll want to clamp
         // prior to assigning back to the body.

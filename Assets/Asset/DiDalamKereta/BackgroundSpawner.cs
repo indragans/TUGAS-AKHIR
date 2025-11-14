@@ -5,7 +5,6 @@ public class BackgroundSpawner : MonoBehaviour
     [SerializeField] private GameObject[] backgroundPrefabs;
     [SerializeField] private float spawnInterval = 1f;
     [SerializeField] private float heightRange = 0.5f;
-    [SerializeField] private float destroyDelay = 20f;
 
     [SerializeField] private float timer;
 
@@ -31,7 +30,6 @@ public class BackgroundSpawner : MonoBehaviour
         // spawn prefab
         GameObject background = Instantiate(backgroundPrefabs[randomIndex], spawnPos, Quaternion.identity);
 
-        // auto-destroy setelah 20 detik
-        Destroy(background, destroyDelay);
+        
     }
 }
