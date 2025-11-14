@@ -25,6 +25,12 @@ public class Dialogue : MonoBehaviour
     //Wait for next boolean
     private bool waitForNext;
 
+    // Floating text movement
+    public float floatSpeed = 2f;   // kecepatan naik-turun
+    public float floatAmount = 5f;  // seberapa tinggi naik-turunnya
+
+    private Vector3 originalTextPos; 
+
     private void Awake()
     {
         ToggleIndicator(false);
@@ -52,6 +58,10 @@ public class Dialogue : MonoBehaviour
         ToggleWindow(true);
         //hide the indicator
         ToggleIndicator(false);
+
+        // simpan posisi awal sebelum animasi
+        originalTextPos = dialogueText.rectTransform.anchoredPosition;
+
         //Start with first dialogue
         GetDialogue(0);
     }
@@ -78,7 +88,10 @@ public class Dialogue : MonoBehaviour
         //Stop all Ienumerators
         StopAllCoroutines();
         //Hide the window
-        ToggleWindow(false);        
+        ToggleWindow(false);
+
+        // reset posisi biar tidak nyangkut animasinya
+        dialogueText.rectTransform.anchoredPosition = originalTextPos;        
     }
     //Writing logic
     IEnumerator Writing()
@@ -109,6 +122,11 @@ public class Dialogue : MonoBehaviour
     {
         if (!started)
             return;
+
+        // Floating animation
+        Vector3 newPos = originalTextPos;
+        newPos.y += Mathf.Sin(Time.time * floatSpeed) * floatAmount;
+        dialogueText.rectTransform.anchoredPosition = newPos;
 
         if(waitForNext && Input.GetKeyDown(KeyCode.E))
         {
