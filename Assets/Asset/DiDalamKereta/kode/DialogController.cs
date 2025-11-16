@@ -1,31 +1,49 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
-public class DialogFancy3D : MonoBehaviour
+
+public class DialogController : MonoBehaviour
 {
-    public TextMeshPro dialogText;      // TMP 3D
+    public bool dialogFinished = false;
+
+    [Header("Text & Sentences")]
+    public TextMeshPro dialogText;         // TextMeshPro (3D)
     public string[] sentences;
     public float typingSpeed = 0.03f;
 
-    public AudioSource audioSource;     
+    [Header("Sound (optional)")]
+    public AudioSource audioSource;
     public AudioClip typeSound;
+
+    [Header("Bounce (per-char)")]
+    public float bounceAmplitude = 0.06f;  // tinggi loncatan (meter/units)
+    public float bounceFrequency = 3f;     // frekuensi loncatan (cycles per second)
 
     private int index = 0;
     private bool isTyping = false;
     private Coroutine typingCoroutine;
 
-    // Wave effect
-    public float amplitude = 0.1f;
-    public float frequency = 6f;
+    // track waktu mulai muncul tiap karakter (index berdasarkan posisi karakter)
+    private float[] charStartTimes;
 
     void Start()
     {
+        /*audioSource.playOnAwake = false;
+        audioSource.loop = false;
+        audioSource.clip = null;*/
+
+        // pre-alloc buffer untuk charStartTimes (maks 1000 default, akan expand jika perlu)
+        charStartTimes = new float[1024];
+        for (int i = 0; i < charStartTimes.Length; i++) charStartTimes[i] = -1f;
+
         ShowSentence();
     }
 
     void Update()
     {
+        // Input handling
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (isTyping)
@@ -34,7 +52,18 @@ public class DialogFancy3D : MonoBehaviour
                 NextSentence();
         }
 
-        ApplyWaveEffect(); // terus jalan, baik typing maupun selesai
+        // Always update per-character bounce (whether typing or already finished)
+        ApplyPerCharBounce();
+    }
+
+    void EnsureCharBufferCapacity(int needed)
+    {
+        if (needed <= charStartTimes.Length) return;
+        int newSize = Mathf.NextPowerOfTwo(needed);
+        float[] newArr = new float[newSize];
+        for (int i = 0; i < newArr.Length; i++) newArr[i] = -1f;
+        for (int i = 0; i < charStartTimes.Length; i++) newArr[i] = charStartTimes[i];
+        charStartTimes = newArr;
     }
 
     void ShowSentence()
@@ -45,6 +74,11 @@ public class DialogFancy3D : MonoBehaviour
             return;
         }
 
+        // reset start times for upcoming text length
+        int maxLen = Mathf.Max( (dialogText.text != null ? dialogText.text.Length : 0), sentences[index].Length );
+        EnsureCharBufferCapacity(maxLen);
+        for (int i = 0; i < maxLen; i++) charStartTimes[i] = -1f;
+
         if (typingCoroutine != null)
             StopCoroutine(typingCoroutine);
 
@@ -52,16 +86,23 @@ public class DialogFancy3D : MonoBehaviour
         typingCoroutine = StartCoroutine(TypeSentence(sentences[index]));
     }
 
-    IEnumerator TypeSentence(string sentence)
+   IEnumerator TypeSentence(string sentence)
     {
         isTyping = true;
+
+        dialogText.text = "";
 
         for (int i = 0; i < sentence.Length; i++)
         {
             dialogText.text += sentence[i];
 
-            if (typeSound != null && audioSource != null)
+            charStartTimes[i] = Time.time;
+
+            // sound only when typing
+            if (audioSource != null && typeSound != null)
+            {
                 audioSource.PlayOneShot(typeSound);
+            }
 
             yield return new WaitForSeconds(typingSpeed);
         }
@@ -69,51 +110,78 @@ public class DialogFancy3D : MonoBehaviour
         isTyping = false;
     }
 
+
     void FinishTyping()
     {
         if (typingCoroutine != null)
             StopCoroutine(typingCoroutine);
 
-        dialogText.text = sentences[index];
+        // reveal full sentence and set start times for any characters not yet timestamped
+        string s = sentences[index];
+        dialogText.text = s;
+
+        EnsureCharBufferCapacity(s.Length);
+        for (int i = 0; i < s.Length; i++)
+        {
+            if (charStartTimes[i] < 0f) // not set yet
+                charStartTimes[i] = Time.time;
+        }
+
         isTyping = false;
     }
 
     void NextSentence()
     {
         index++;
-        ShowSentence();
+        if (index < sentences.Length)
+        {
+            ShowSentence();
+        }
+        else
+        {
+            dialogFinished = true;
+        }
     }
 
-    void ApplyWaveEffect()
+    void ApplyPerCharBounce()
     {
         dialogText.ForceMeshUpdate();
+
         TMP_TextInfo textInfo = dialogText.textInfo;
+        int charCount = textInfo.characterCount;
         float time = Time.time;
 
-        for (int i = 0; i < textInfo.characterCount; i++)
+        for (int i = 0; i < charCount; i++)
         {
-            if (!textInfo.characterInfo[i].isVisible) continue;
+            TMP_CharacterInfo charInfo = textInfo.characterInfo[i];
+            if (!charInfo.isVisible) continue;
 
-            int vertexIndex = textInfo.characterInfo[i].vertexIndex;
-            int meshIndex = textInfo.characterInfo[i].materialReferenceIndex;
+            int mIndex = charInfo.materialReferenceIndex;
+            int vIndex = charInfo.vertexIndex;
 
-            Vector3[] vertices = textInfo.meshInfo[meshIndex].vertices;
+            Vector3[] verts = textInfo.meshInfo[mIndex].vertices;
 
-            float wave = Mathf.Sin(time * frequency + i * 0.3f) * amplitude;
+            float startTime = charStartTimes[i];
+            if (startTime < 0f) continue;
 
-            vertices[vertexIndex + 0].y += wave;
-            vertices[vertexIndex + 1].y += wave;
-            vertices[vertexIndex + 2].y += wave;
-            vertices[vertexIndex + 3].y += wave;
+            float elapsed = time - startTime;
 
-            textInfo.meshInfo[meshIndex].vertices = vertices;
+            // Kaku: pingpong (atas-bawah)
+            float yOffset = Mathf.PingPong(elapsed * bounceFrequency, bounceAmplitude * 2) - bounceAmplitude;
+
+            verts[vIndex + 0].y += yOffset;
+            verts[vIndex + 1].y += yOffset;
+            verts[vIndex + 2].y += yOffset;
+            verts[vIndex + 3].y += yOffset;
         }
 
-        // Apply ke TMP 3D
+        // Apply modified mesh
         for (int i = 0; i < textInfo.meshInfo.Length; i++)
         {
-            textInfo.meshInfo[i].mesh.vertices = textInfo.meshInfo[i].vertices;
-            dialogText.UpdateGeometry(textInfo.meshInfo[i].mesh, i);
+            var meshInfo = textInfo.meshInfo[i];
+            meshInfo.mesh.vertices = meshInfo.vertices;
+            dialogText.UpdateGeometry(meshInfo.mesh, i);
         }
     }
+
 }
