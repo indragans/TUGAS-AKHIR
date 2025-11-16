@@ -38,7 +38,7 @@ public class Transisi : MonoBehaviour
     IEnumerator ExitTransisi()
     {
         akhirTransisi.SetActive(true);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
 
         // Load scene berdasarkan input inspector
         SceneManager.LoadScene(nextSceneName);
