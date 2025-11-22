@@ -10,6 +10,7 @@ public class PlayerMovementSimpleAnim : MonoBehaviour
     private Animator anim;
     private bool isGrounded = true;
 
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();

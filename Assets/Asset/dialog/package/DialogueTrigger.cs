@@ -5,33 +5,35 @@ using UnityEngine;
 public class DialogueTrigger : MonoBehaviour
 {
     public Dialogue dialogueScript;
-    private bool playerDetected;
+    private bool playerDetected = false;
 
-    //Detect trigger with player
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //If we triggerd the player enable playerdeteced and show indicator
-        if(collision.tag == "Player")
+        if (collision.CompareTag("Player"))
         {
             playerDetected = true;
-            dialogueScript.ToggleIndicator(playerDetected);
+            dialogueScript.ToggleIndicator(true);
+
+            // Assign Rigidbody untuk freeze player
+            Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
+            if (rb != null)
+                dialogueScript.AssignPlayer(rb);
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        //If we lost trigger  with the player disable playerdeteced and hide indicator
-        if (collision.tag == "Player")
+        if (collision.CompareTag("Player"))
         {
             playerDetected = false;
-            dialogueScript.ToggleIndicator(playerDetected);
+            dialogueScript.ToggleIndicator(false);
             dialogueScript.EndDialogue();
         }
     }
-    //While detected if we interact start the dialogue
+
     private void Update()
     {
-        if(playerDetected && Input.GetKeyDown(KeyCode.E))
+        if (playerDetected && Input.GetKeyDown(KeyCode.E))
         {
             dialogueScript.StartDialogue();
         }

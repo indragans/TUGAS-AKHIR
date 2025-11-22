@@ -5,31 +5,27 @@ using TMPro;
 
 public class Dialogue : MonoBehaviour
 {
-    //Fields
-    //Window
+    [Header("UI")]
     public GameObject window;
-    //Indicator
     public GameObject indicator;
-    //Text component
     public TMP_Text dialogueText;
-    //Dialogues list
+
+    [Header("Dialogues")]
     public List<string> dialogues;
-    //Writing speed
-    public float writingSpeed;
-    //Index on dialogue
-    private int index;
-    //Character index
-    private int charIndex;
-    //Started boolean
-    private bool started;
-    //Wait for next boolean
-    private bool waitForNext;
+    public float writingSpeed = 0.02f;
 
-    // Floating text movement
-    public float floatSpeed = 2f;   // kecepatan naik-turun
-    public float floatAmount = 5f;  // seberapa tinggi naik-turunnya
+    private int index = 0;          // current dialogue index
+    private bool started = false;   
+    private bool waitForNext = false;
 
-    private Vector3 originalTextPos; 
+    // Freeze player
+    private Rigidbody2D playerRB;
+    private Vector2 savedVelocity;
+
+    public void AssignPlayer(Rigidbody2D rb)
+    {
+        playerRB = rb;
+    }
 
     private void Awake()
     {
@@ -41,111 +37,85 @@ public class Dialogue : MonoBehaviour
     {
         window.SetActive(show);
     }
+
     public void ToggleIndicator(bool show)
     {
         indicator.SetActive(show);
     }
 
-    //Start Dialogue
     public void StartDialogue()
     {
-        if (started)
+        if (started || dialogues.Count == 0)
             return;
 
-        //Boolean to indicate that we have started
         started = true;
-        //Show the window
         ToggleWindow(true);
-        //hide the indicator
         ToggleIndicator(false);
 
-        // simpan posisi awal sebelum animasi
-        originalTextPos = dialogueText.rectTransform.anchoredPosition;
-
-        //Start with first dialogue
-        GetDialogue(0);
-    }
-
-    private void GetDialogue(int i)
-    {
-        //start index at zero
-        index = i;
-        //Reset the character index
-        charIndex = 0;
-        //clear the dialogue component text
-        dialogueText.text = string.Empty;
-        //Start writing
-        StartCoroutine(Writing());
-    }
-
-    //End Dialogue
-    public void EndDialogue()
-    {
-        //Stared is disabled
-        started = false;
-        //Disable wait for next as well
-        waitForNext = false;
-        //Stop all Ienumerators
-        StopAllCoroutines();
-        //Hide the window
-        ToggleWindow(false);
-
-        // reset posisi biar tidak nyangkut animasinya
-        dialogueText.rectTransform.anchoredPosition = originalTextPos;        
-    }
-    //Writing logic
-    IEnumerator Writing()
-    {
-        yield return new WaitForSeconds(writingSpeed);
-
-        string currentDialogue = dialogues[index];
-        //Write the character
-        dialogueText.text += currentDialogue[charIndex];
-        //increase the character index 
-        charIndex++;
-        //Make sure you have reached the end of the sentence
-        if(charIndex < currentDialogue.Length)
+        // Freeze Player
+        if (playerRB != null)
         {
-            //Wait x seconds 
-            yield return new WaitForSeconds(writingSpeed);
-            //Restart the same process
-            StartCoroutine(Writing());
+            savedVelocity = playerRB.velocity;
+            playerRB.velocity = Vector2.zero;
+            playerRB.constraints = RigidbodyConstraints2D.FreezeAll;
         }
-        else
+
+        // jangan reset index setiap kali kecuali ingin restart
+        if (index >= dialogues.Count) index = 0;
+
+        StartCoroutine(Writing(dialogues[index]));
+    }
+
+    private IEnumerator Writing(string sentence)
+    {
+        dialogueText.text = "";
+
+        foreach (char c in sentence)
         {
-            //End this sentence and wait for the next one
-            waitForNext = true;
-        }        
+            dialogueText.text += c;
+            yield return new WaitForSeconds(writingSpeed);
+        }
+
+        waitForNext = true; // selesai menulis kalimat
     }
 
     private void Update()
     {
-        if (!started)
-            return;
+        if (!started) return;
 
-        // Floating animation
-        Vector3 newPos = originalTextPos;
-        newPos.y += Mathf.Sin(Time.time * floatSpeed) * floatAmount;
-        dialogueText.rectTransform.anchoredPosition = newPos;
-
-        if(waitForNext && Input.GetKeyDown(KeyCode.E))
+        if (waitForNext && Input.GetKeyDown(KeyCode.E))
         {
             waitForNext = false;
             index++;
 
-            //Check if we are in the scope fo dialogues List
-            if(index < dialogues.Count)
+            if (index < dialogues.Count)
             {
-                //If so fetch the next dialogue
-                GetDialogue(index);
+                StartCoroutine(Writing(dialogues[index]));
             }
             else
             {
-                //If not end the dialogue process
-                ToggleIndicator(true);
                 EndDialogue();
-            }            
+                // Jangan reset index disini supaya object berikutnya mulai dari awal
+            }
         }
     }
 
+    public void EndDialogue(bool showIndicator = true)
+    {
+        started = false;
+        waitForNext = false;
+        StopAllCoroutines();
+        ToggleWindow(false);
+        ToggleIndicator(showIndicator);
+
+        // Unfreeze player
+        if (playerRB != null)
+        {
+            playerRB.constraints = RigidbodyConstraints2D.FreezeRotation;
+            playerRB.velocity = savedVelocity;
+        }
+
+        // Hanya reset index kalau object ingin dipakai lagi nanti
+        // index = 0; 
+    }
 }

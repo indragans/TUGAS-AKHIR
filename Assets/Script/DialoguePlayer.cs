@@ -129,8 +129,9 @@ public class DialoguePlayer : Singleton<DialoguePlayer>
     {
         if (_ctrl != null) _ctrl.Tick();
 
-        if (dialogueIsPlaying && waitingForInput && Input.GetKeyDown(KeyCode.Space))
+        if (dialogueIsPlaying && waitingForInput && Input.GetKeyDown(KeyCode.E))
         {
+            Debug.Log("lol");
             waitingForInput = false;
             StartCoroutine(NextDialogue());
         }

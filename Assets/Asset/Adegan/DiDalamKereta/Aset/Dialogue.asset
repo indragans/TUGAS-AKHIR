@@ -1,0 +1,329 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8645159754258616505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f157564dbc846468ec0ac2b6f7d545e, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  _uniqueId: 52ba7902-b68c-40bf-ae43-5370b40150dd
+  rect:
+    serializedVersion: 2
+    x: 50584.5
+    y: 50364
+    width: 200
+    height: 146
+  nodeTitle: 
+  children:
+  - {fileID: -828162212629522588}
+  conditions: []
+  enterActions: []
+  exitActions: []
+  choices: []
+  actor: {fileID: 11400000, guid: 4fc1a7f8629bcc4489bd502e16fe3470, type: 2}
+  audio: {fileID: 0}
+  dialogue: "DON\u2019T SPEAK TO YOUR OWNSELF"
+--- !u!114 &-1978691470050762887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d8d0566afe4d5fa9596c80df966df6, type: 3}
+  m_Name: Root
+  m_EditorClassIdentifier: 
+  _uniqueId: 39d15cb8-4a0f-4874-a944-213440cf59f8
+  rect:
+    serializedVersion: 2
+    x: 49896
+    y: 50148.5
+    width: 100
+    height: 57
+  nodeTitle: 
+  children:
+  - {fileID: 5693060964206755743}
+  conditions: []
+  enterActions: []
+  exitActions: []
+--- !u!114 &-1757939055147499888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f157564dbc846468ec0ac2b6f7d545e, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  _uniqueId: 8ff34473-f751-4950-b117-ba6d0165a14a
+  rect:
+    serializedVersion: 2
+    x: 50819.5
+    y: 50623
+    width: 200
+    height: 146
+  nodeTitle: 
+  children:
+  - {fileID: 3430667079325319478}
+  conditions: []
+  enterActions: []
+  exitActions: []
+  choices: []
+  actor: {fileID: 11400000, guid: 4fc1a7f8629bcc4489bd502e16fe3470, type: 2}
+  audio: {fileID: 0}
+  dialogue: PEOPLE HERE ARE SO JUDGY
+--- !u!114 &-828162212629522588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f157564dbc846468ec0ac2b6f7d545e, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  _uniqueId: bbf57f3a-79db-4b87-b83d-7ad6227b50ef
+  rect:
+    serializedVersion: 2
+    x: 50501.5
+    y: 50646.5
+    width: 200
+    height: 146
+  nodeTitle: 
+  children:
+  - {fileID: -1757939055147499888}
+  conditions: []
+  enterActions: []
+  exitActions: []
+  choices: []
+  actor: {fileID: 11400000, guid: 4fc1a7f8629bcc4489bd502e16fe3470, type: 2}
+  audio: {fileID: 0}
+  dialogue: SEEM SO FREAK
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b35851dfd8754a74b333944d50d05bbd, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  _nodes:
+  - {fileID: -1978691470050762887}
+  - {fileID: 5693060964206755743}
+  - {fileID: 51089961885032600}
+  - {fileID: 4123907689839720871}
+  - {fileID: -8645159754258616505}
+  - {fileID: -828162212629522588}
+  - {fileID: -1757939055147499888}
+  - {fileID: 3430667079325319478}
+  - {fileID: 2279579641117913259}
+  - {fileID: 5833902546038752607}
+  root: {fileID: -1978691470050762887}
+  scrollPosition: {x: 49842.75, y: 50301}
+--- !u!114 &51089961885032600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f157564dbc846468ec0ac2b6f7d545e, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  _uniqueId: 91cb50a5-1d0e-4b45-9065-db1ee03a28a7
+  rect:
+    serializedVersion: 2
+    x: 50293.5
+    y: 50123
+    width: 200
+    height: 164
+  nodeTitle: 
+  children:
+  - {fileID: 4123907689839720871}
+  conditions: []
+  enterActions: []
+  exitActions: []
+  choices:
+  - {fileID: 8508798209073637188}
+  actor: {fileID: 11400000, guid: 2c088802611877642855e067bbf2035a, type: 2}
+  audio: {fileID: 0}
+  dialogue: YOU THOUGHT?
+--- !u!114 &2279579641117913259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f157564dbc846468ec0ac2b6f7d545e, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  _uniqueId: b93bb94f-3aad-4221-8f39-585b98ada00b
+  rect:
+    serializedVersion: 2
+    x: 51094
+    y: 50904
+    width: 200
+    height: 146
+  nodeTitle: 
+  children:
+  - {fileID: 5833902546038752607}
+  conditions: []
+  enterActions: []
+  exitActions: []
+  choices: []
+  actor: {fileID: 11400000, guid: 4fc1a7f8629bcc4489bd502e16fe3470, type: 2}
+  audio: {fileID: 0}
+  dialogue: YOU WILL UNDERSTAND ITSELF
+--- !u!114 &3430667079325319478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f157564dbc846468ec0ac2b6f7d545e, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  _uniqueId: 9ea6aa64-2d08-4dd7-bdc2-b1d4f534ebd6
+  rect:
+    serializedVersion: 2
+    x: 50784
+    y: 50897.5
+    width: 200
+    height: 146
+  nodeTitle: 
+  children:
+  - {fileID: 2279579641117913259}
+  conditions: []
+  enterActions: []
+  exitActions: []
+  choices: []
+  actor: {fileID: 11400000, guid: 2c088802611877642855e067bbf2035a, type: 2}
+  audio: {fileID: 0}
+  dialogue: "EHH\u2026WHY?"
+--- !u!114 &4123907689839720871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f157564dbc846468ec0ac2b6f7d545e, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  _uniqueId: 3eb15753-d821-45ae-bbf4-cace18e0bb87
+  rect:
+    serializedVersion: 2
+    x: 50244.5
+    y: 50405
+    width: 200
+    height: 146
+  nodeTitle: 
+  children:
+  - {fileID: -8645159754258616505}
+  conditions: []
+  enterActions: []
+  exitActions: []
+  choices: []
+  actor: {fileID: 11400000, guid: 4fc1a7f8629bcc4489bd502e16fe3470, type: 2}
+  audio: {fileID: 0}
+  dialogue: BE CAREFUL KIDDO!
+--- !u!114 &5693060964206755743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f157564dbc846468ec0ac2b6f7d545e, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  _uniqueId: 3c8224c9-38d7-408e-b8a0-74758155dc4d
+  rect:
+    serializedVersion: 2
+    x: 50032
+    y: 50115
+    width: 200
+    height: 146
+  nodeTitle: 
+  children:
+  - {fileID: 51089961885032600}
+  conditions: []
+  enterActions: []
+  exitActions: []
+  choices: []
+  actor: {fileID: 11400000, guid: 4fc1a7f8629bcc4489bd502e16fe3470, type: 2}
+  audio: {fileID: 0}
+  dialogue: CITY BOY?
+--- !u!114 &5833902546038752607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f157564dbc846468ec0ac2b6f7d545e, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  _uniqueId: af9dcb7b-9536-4d1d-8815-477b03062ff0
+  rect:
+    serializedVersion: 2
+    x: 50809
+    y: 51154
+    width: 200
+    height: 146
+  nodeTitle: 
+  children: []
+  conditions: []
+  enterActions: []
+  exitActions: []
+  choices: []
+  actor: {fileID: 11400000, guid: 4fc1a7f8629bcc4489bd502e16fe3470, type: 2}
+  audio: {fileID: 0}
+  dialogue: JUST BE CAREFUL
+--- !u!114 &8508798209073637188
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbb407621a43446dac370b409a9ddc29, type: 3}
+  m_Name: Choice
+  m_EditorClassIdentifier: 
+  text: 
+  children:
+  - {fileID: 4123907689839720871}
+  _uniqueId: 605f59fc-f5c6-4d2e-82d3-6097c4e10c19
